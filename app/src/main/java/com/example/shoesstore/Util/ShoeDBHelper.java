@@ -120,7 +120,7 @@ public class ShoeDBHelper {
     }
 
     public Cursor GetShoeByShoeName(String name){
-        Cursor cursor = database.GetData("SELECT shoeId, shoeName, imgName, shoeDescription, shoePrimaryPrice, quantity, isDelete FROM Shoe WHERE shoeName LIKE  '%" + name + "%'");
+        Cursor cursor = database.GetData("SELECT shoeId, shoeName, imgName, shoeDescription, shoePrimaryPrice, quantity, isDelete FROM Shoe WHERE isDelete = 0 AND shoeName LIKE  '%" + name + "%'");
         return cursor;
     }
 }
