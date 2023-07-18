@@ -188,84 +188,110 @@ public class AdminViewActivity extends AppCompatActivity {
 
 
         btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                storageRef.delete();
-                if (filePath != null) {
-                    // Code for showing progressDialog while uploading
+                                       @Override
+                                       public void onClick(View v) {
+                                           if (filePath != null) {
+                                               storageRef.delete();
+                                               // Code for showing progressDialog while uploading
 
-                    ContentResolver contentResolver = getContentResolver();
-                    String fileType = contentResolver.getType(filePath);
-                    String[] part = fileType.split("/");
-                    String subType = part[1];
-                    String fileName = UUID.randomUUID().toString();
+                                               ContentResolver contentResolver = getContentResolver();
+                                               String fileType = contentResolver.getType(filePath);
+                                               String[] part = fileType.split("/");
+                                               String subType = part[1];
+                                               String fileName = UUID.randomUUID().toString();
 
-                    // Defining the child of storageReference
-                    StorageReference ref = storageReference.child("images/" + fileName);
-                    // adding listeners on upload
-                    // or failure of image
-                    ref.putFile(filePath)
-                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    try {
-                                        if (txtShoeName.getText().toString().isEmpty()
-                                                || fileName.isEmpty()
-                                                || txtShoeDescription.getText().toString().isEmpty()
-                                                || txtShoePrimaryPrice.getText().toString().isEmpty()
-                                                || txtQuantity.getText().toString().isEmpty()) {
-                                            Toast.makeText(AdminViewActivity.this, "Please enter data in fields", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            int sID = shoeID;
-                                            String shoeName = txtShoeName.getText().toString();
-                                            String description = txtShoeDescription.getText().toString();
-                                            double shoePrimaryPrice = Double.parseDouble(txtShoePrimaryPrice.getText().toString());
-                                            int quantity = Integer.parseInt(txtQuantity.getText().toString());
+                                               // Defining the child of storageReference
+                                               StorageReference ref = storageReference.child("images/" + fileName);
+                                               // adding listeners on upload
+                                               // or failure of image
+                                               ref.putFile(filePath)
+                                                       .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                           @Override
+                                                           public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                               try {
+                                                                   if (txtShoeName.getText().toString().isEmpty()
+                                                                           || fileName.isEmpty()
+                                                                           || txtShoeDescription.getText().toString().isEmpty()
+                                                                           || txtShoePrimaryPrice.getText().toString().isEmpty()
+                                                                           || txtQuantity.getText().toString().isEmpty()) {
+                                                                       Toast.makeText(AdminViewActivity.this, "Please enter data in fields", Toast.LENGTH_SHORT).show();
+                                                                   } else {
+                                                                       int sID = shoeID;
+                                                                       String shoeName = txtShoeName.getText().toString();
+                                                                       String description = txtShoeDescription.getText().toString();
+                                                                       double shoePrimaryPrice = Double.parseDouble(txtShoePrimaryPrice.getText().toString());
+                                                                       int quantity = Integer.parseInt(txtQuantity.getText().toString());
 
-                                            Shoe shoeEdit = new Shoe(sID, shoeName, (fileName + "." + subType), description, shoePrimaryPrice, quantity, false);
-                                            shoeDBHelper.UpdateShoe(shoeEdit);
-                                            Toast.makeText(AdminViewActivity.this, "Update Successfully", Toast.LENGTH_SHORT).show();
+                                                                       Shoe shoeEdit = new Shoe(sID, shoeName, (fileName + "." + subType), description, shoePrimaryPrice, quantity, false);
+                                                                       shoeDBHelper.UpdateShoe(shoeEdit);
+                                                                       Toast.makeText(AdminViewActivity.this, "Update Successfully", Toast.LENGTH_SHORT).show();
 
-                                            dialog.dismiss();
-                                            RefreshData();
-                                        }
-                                    } catch (Exception e) {
-                                        Log.d("Error", e.getMessage());
-                                    }
+                                                                       dialog.dismiss();
+                                                                       RefreshData();
+                                                                   }
+                                                               } catch (Exception e) {
+                                                                   Log.d("Error", e.getMessage());
+                                                               }
 
-                                }
-                            })
+                                                           }
+                                                       })
 
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
+                                                       .addOnFailureListener(new OnFailureListener() {
+                                                           @Override
+                                                           public void onFailure(@NonNull Exception e) {
 
-                                    // Error, Image not uploaded
+                                                               // Error, Image not uploaded
 
-                                    Toast
-                                            .makeText(AdminViewActivity.this,
-                                                    "Failed " + e.getMessage(),
-                                                    Toast.LENGTH_SHORT)
-                                            .show();
-                                }
-                            })
-                            .addOnProgressListener(
-                                    new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                                               Toast
+                                                                       .makeText(AdminViewActivity.this,
+                                                                               "Failed " + e.getMessage(),
+                                                                               Toast.LENGTH_SHORT)
+                                                                       .show();
+                                                           }
+                                                       })
+                                                       .addOnProgressListener(
+                                                               new OnProgressListener<UploadTask.TaskSnapshot>() {
 
-                                        // Progress Listener for loading
-                                        // percentage on the dialog box
-                                        @Override
-                                        public void onProgress(
-                                                UploadTask.TaskSnapshot taskSnapshot) {
-                                            double progress
-                                                    = (100.0
-                                                    * taskSnapshot.getBytesTransferred()
-                                                    / taskSnapshot.getTotalByteCount());
-                                        }
-                                    });
-                }
-            }
-        });
+                                                                   // Progress Listener for loading
+                                                                   // percentage on the dialog box
+                                                                   @Override
+                                                                   public void onProgress(
+                                                                           UploadTask.TaskSnapshot taskSnapshot) {
+                                                                       double progress
+                                                                               = (100.0
+                                                                               * taskSnapshot.getBytesTransferred()
+                                                                               / taskSnapshot.getTotalByteCount());
+                                                                   }
+                                                               });
+                                           } else {
+                                               if (txtShoeName.getText().toString().isEmpty()
+                                                       || txtShoeDescription.getText().toString().isEmpty()
+                                                       || txtShoePrimaryPrice.getText().toString().isEmpty()
+                                                       || txtQuantity.getText().toString().isEmpty()) {
+                                                   Toast.makeText(AdminViewActivity.this, "Please enter data in fields", Toast.LENGTH_SHORT).show();
+                                               } else {
+                                                   int sID = shoeID;
+                                                   String shoeName = txtShoeName.getText().toString();
+                                                   String description = txtShoeDescription.getText().toString();
+                                                   double shoePrimaryPrice = Double.parseDouble(txtShoePrimaryPrice.getText().toString());
+                                                   int quantity = Integer.parseInt(txtQuantity.getText().toString());
+
+                                                   Shoe shoeEdit = shoeDBHelper.getShoeById(sID);
+                                                   shoeEdit.setDelete(false);
+                                                   shoeEdit.setShoeName(shoeName);
+                                                   shoeEdit.setShoeDescription(description);
+                                                   shoeEdit.setShoePrimaryPrice(shoePrimaryPrice);
+                                                   shoeEdit.setQuantity(quantity);
+                                                   shoeDBHelper.UpdateShoe(shoeEdit);
+                                                   Toast.makeText(AdminViewActivity.this, "Update Successfully", Toast.LENGTH_SHORT).show();
+
+                                                   dialog.dismiss();
+                                                   RefreshData();
+                                               }
+                                           }
+                                       }
+                                   }
+        );
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
